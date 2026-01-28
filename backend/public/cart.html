@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cart</title>
+<style>
+  body{font-family:Arial;background:#f1f3f6;padding:20px}
+  .cart-box{
+    max-width:700px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+  }
+  .item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
+  }
+  .qty button{
+    padding:5px 10px;
+    margin:0 5px;
+  }
+  .remove{
+    background:red;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:4px;
+  }
+  .total{
+    text-align:right;
+    font-size:18px;
+    margin-top:15px;
+    font-weight:bold;
+  }
+  .checkout{
+    width:100%;
+    padding:12px;
+    background:#28a745;
+    color:white;
+    border:none;
+    border-radius:6px;
+    margin-top:10px;
+  }
+</style>
+</head>
+
+<body>
+<div class="cart-box">
+  <h2>Your Cart</h2>
+
+  <!-- DO NOT CHANGE ID -->
+  <div id="cart"></div>
+
+  <!-- DO NOT CHANGE ID -->
+  <div id="total" class="total">Total: ₹0</div>
+
+  <!-- KEEP EXISTING FUNCTION -->
+  <button class="checkout" onclick="payUPI()">Pay via UPI</button>
+
+</div>
+
+<script src="cart.js"></script>
+
+<a href="index.html">⬅ Back</a>
+
+<script>
+
+function loadCart() {
+  fetch("/cart", { credentials: "include" })
+    .then(r => r.json())
+    .then(items => {
+      const box = document.getElementById("cart");
+      box.innerHTML = "";
+      let total = 0;
+
+      if (items.length === 0) {
+        box.innerHTML = "<p>Cart is empty</p>";
+        return;
+      }
+
+      items.forEach(i => {
+        total += i.price * i.qty;
+        box.innerHTML += `
+          <p>
+            <b>${i.product}</b> - ₹${i.price} × ${i.qty}
+            <button onclick="updateQty('${i.product}', ${i.qty + 1})">➕</button>
+            <button onclick="updateQty('${i.product}', ${i.qty - 1})">➖</button>
+            <button onclick="removeItem('${i.product}')">❌</button>
+          </p>
+        `;
+      });
+
+      document.getElementById("total").innerText = "Total: ₹" + total;
+    });
+}
+
+function updateQty(product, qty) {
+  fetch("/cart/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ product, qty })
+  }).then(loadCart);
+}
+
+function removeItem(product) {
+  fetch("/cart/remove", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ product })
+  }).then(loadCart);
+}
+
+loadCart();
+
+function checkout() {
+  fetch("/checkout", {
+    method: "POST",
+    credentials: "include"
+  })
+  .then(r => r.json())
+  .then(d => {
+    if (d.msg === "order placed") {
+      alert("Order placed successfully");
+      loadCart();
+    }
+  });
+}
+
+
+function payUPI() {
+  alert("Pay to UPI ID:\n9788686860@upi\nAmount will be collected");
+}
+
+
+
+
+</script>
+
+</body>
+</html>
+
