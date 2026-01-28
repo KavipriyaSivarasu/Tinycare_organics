@@ -1,85 +1,86 @@
-
 const express = require("express");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
+const path = require("path");
 
 const app = express();
 
-/* ---------- MIDDLEWARE ---------- */
+/* ---------------- MIDDLEWARE ---------------- */
 app.use(express.json());
-app.use(express.static("public")); // 🔥 SERVE HTML FILES
+app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
-  secret: "secret123",
-  resave: false,
-  saveUninitialized: false,
-  cookie: { sameSite: "lax" }
-}));
+app.use(express.static(path.join(__dirname, "public")));
 
-/* ---------- FILE PATHS ---------- */
+app.set("trust proxy", 1);
+
+app.use(
+  session({
+    name: "tinycare.sid",
+    secret: "secret123",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
+  })
+);
+
+/* ---------------- FILE SETUP ---------------- */
 const USERS = "./data/users.json";
 const CART = "./data/cart.json";
 
-/* ---------- ENSURE FILES EXIST ---------- */
 if (!fs.existsSync("./data")) fs.mkdirSync("./data");
 if (!fs.existsSync(USERS)) fs.writeFileSync(USERS, "[]");
 if (!fs.existsSync(CART)) fs.writeFileSync(CART, "[]");
 
-/* ---------- TEST ---------- */
-app.get("/", (req, res) => res.send("SERVER OK"));
-
-/* ---------- REGISTER ---------- */
-app.post("/register", (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log("REGISTER:", email);
-
-    const users = JSON.parse(fs.readFileSync(USERS, "utf8"));
-
-    if (users.find(u => u.email === email)) {
-      return res.json({ msg: "exists" });
-    }
-
-    users.push({
-      email,
-      password: bcrypt.hashSync(password, 10)
-    });
-
-    fs.writeFileSync(USERS, JSON.stringify(users, null, 2));
-    res.json({ msg: "registered" });
-
-  } catch (e) {
-    console.error("REGISTER ERROR:", e);
-    res.status(500).json({ msg: "server error" });
-  }
+/* ---------------- TEST ROUTE ---------------- */
+app.get("/", (req, res) => {
+  res.send("SERVER OK");
 });
 
-/* ---------- LOGIN ---------- */
+/* ---------------- REGISTER ---------------- */
+app.post("/register", (req, res) => {
+  const { email, password } = req.body;
+
+  const users = JSON.parse(fs.readFileSync(USERS));
+  const exists = users.find((u) => u.email === email);
+  if (exists) return res.status(400).json({ message: "User exists" });
+
+  const hashed = bcrypt.hashSync(password, 10);
+  users.push({ email, password: hashed });
+
+  fs.writeFileSync(USERS, JSON.stringify(users));
+  res.json({ message: "Registered" });
+});
+
+/* ---------------- LOGIN ---------------- */
 app.post("/login", (req, res) => {
-  try {
-    const { email, password } = req.body;
-    console.log("LOGIN:", email);
+  const { email, password } = req.body;
+  const users = JSON.parse(fs.readFileSync(USERS));
 
-    if (email === "admin@gmail.com" && password === "admin123") {
-      req.session.email = email;
-      return res.json({ msg: "admin" });
-    }
+  const user = users.find((u) => u.email === email);
+  if (!user) return res.status(401).json({ message: "Invalid login" });
 
-    const users = JSON.parse(fs.readFileSync(USERS, "utf8"));
-    const user = users.find(u => u.email === email);
+  const ok = bcrypt.compareSync(password, user.password);
+  if (!ok) return res.status(401).json({ message: "Invalid login" });
 
-    if (!user || !bcrypt.compareSync(password, user.password)) {
-      return res.json({ msg: "invalid" });
-    }
+  req.session.user = email;
+  res.json({ message: "Login success" });
+});
 
-    req.session.email = email;
-    res.json({ msg: "user" });
+/* ---------------- LOGOUT ---------------- */
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => {
+    res.json({ message: "Logged out" });
+  });
+});
 
-  } catch (e) {
-    console.error("LOGIN ERROR:", e);
-    res.status(500).json({ msg: "server error" });
-  }
+/* ---------------- PORT (IMPORTANT) ---------------- */
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server running on port", PORT);
 });
 
 /* ---------- CART ---------- */

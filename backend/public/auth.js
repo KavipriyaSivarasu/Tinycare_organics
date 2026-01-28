@@ -40,22 +40,17 @@ function register() {
   .catch(() => alert("Server not reachable"));
 }
 
-function login() {
+document.getElementById("loginBtn").onclick = async () => {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  fetch("http://localhost:5000/login", {
+  const res = await fetch("/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password })
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.msg === "user" || data.msg === "admin") {
-      window.location.href = "index.html?email=" + encodeURIComponent(email);
-    } else {
-      alert("Invalid login");
-    }
-  })
-  .catch(() => alert("Server error"));
-}
+    body: JSON.stringify({ email, password }),
+  });
+
+  const data = await res.json();
+  alert(data.message);
+};
+
