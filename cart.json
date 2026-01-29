@@ -1,0 +1,26 @@
+[
+  {
+    "id": 10,
+    "name": "Diaper Rash Cream",
+    "price": 199,
+    "qty": 1
+  },
+  {
+    "id": 6,
+    "name": "Baby Lotion",
+    "price": 279,
+    "qty": 1
+  },
+  {
+    "id": 1,
+    "name": "Baby Wipes",
+    "price": 199,
+    "qty": 1
+  },
+  {
+    "id": 2,
+    "name": "Aloe Vera Baby Wipes",
+    "price": 219,
+    "qty": 1
+  }
+]

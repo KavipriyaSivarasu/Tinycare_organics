@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="index.css">
+
+
+  <meta charset="UTF-8">
+  <title>Tiny Care Organics</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h2>TinyCare Organics</h2>
+<p>KAVI PRIYA S  </p>
+  <p>Roll No: 24MIT021</p>
+<!-- TOP OFFER BAR -->
+<div class="offer-bar">
+  <div class="offer-text">
+    <span>EXTRA 10% OFF ON FIRST ORDER | USE CODE MS10</span>
+    <span>FLAT 30–40% OFF SITEWIDE</span>
+    <span>FREE GIFTS ON ABOVE ₹1999</span>
+    <span>EXTRA 5% OFF ON PREPAID ORDERS</span>
+  </div>
+</div>
+<link rel="stylesheet" href="style.css">
+<header class="main-header">
+  <div class="header-left">
+    <h1 class="logo">TINY CARE ORGANICS</h1>
+
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#why">Why TinyCare</a>
+      <a href="#products">Our Products</a>
+      <a href="#combo">Combo</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact ">Contact US</a>
+    </nav>
+  </div>
+
+  <div class="header-icons">
+
+<!-- LOGIN -->
+<a href="auth.html" style="cursor:pointer; text-decoration:none;">👤 Login</a>
+
+
+
+
+
+<!-- CART -->
+<a href="cart.html" style="cursor:pointer; text-decoration:none;">🛒 Cart</a>
+<span onclick="logout()" style="cursor:pointer;">🚪 Logout</span>
+<!-- LOGOUT BUTTON -->
+
+
+<script>
+function logout() {
+  fetch("/profile", { credentials: "include" })
+
+  alert("Logged out successfully");
+  location.href = "login.html";
+}
+</script>
+
+</div>
+</header>
+
+<section id="home">
+  <div class="three-banner">
+    <div class="three-banner-track">
+      <img src="images/banner1.png">
+      <img src="images/banner2.png">
+      <img src="images/banner3.png">
+      <img src="images/banner1.png">
+      <img src="images/banner2.png">
+      <img src="images/banner3.png">
+    </div>
+  </div>
+</section>
+<!-- WHY TINYCARE -->
+ <section id="why" class="why-tinycare">
+  <div class="why-container">
+
+    <!-- LEFT CONTENT -->
+    <div class="why-content">
+      <span class="why-tag">Why TinyCare</span>
+
+      <h2>
+        Gentle Care for <br>
+        <span>Your Baby’s Delicate Skin</span>
+      </h2>
+
+      <p class="why-desc">
+        TinyCare Organics is thoughtfully crafted with safe, natural ingredients
+        to protect and nourish your baby’s sensitive skin from day one.
+      </p>
+
+      <div class="why-features">
+        <div class="feature">
+          <span>👶</span>
+          <p>Pediatrician Recommended</p>
+        </div>
+
+        <div class="feature">
+          <span>🌿</span>
+          <p>Natural & Organic Ingredients</p>
+        </div>
+
+        <div class="feature">
+          <span>🧼</span>
+          <p>Soap & Tear Free Formula</p>
+        </div>
+
+        <div class="feature">
+          <span>💧</span>
+          <p>pH Balanced for Baby Skin</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- RIGHT IMAGE -->
+    <div class="why-image">
+      <img src="images/combo2.png" alt="TinyCare Products">
+    </div>
+
+  </div>
+</section>
+
+<!-- OUR PRODUCTS -->
+<section id="products" class="products-section">
+
+
+  <div class="products-header">
+    <h2>Our <span>Products</span></h2>
+    <p>Premium, gentle & safe care for your baby</p>
+  </div>
+
+  <div class="products-grid">
+    <!-- WIPES -->
+    <div class="product-card"data-name="baby wipes">
+      <img src="images/waterwipes.png">
+      <h4>Water Baby Wipes</h4>
+      <p>99% purified water</p>
+      <span class="price">₹199</span>
+       <button onclick="addToCart(1,'Baby Wipes', 199)">Add to Cart</button>
+       
+    </div>
+
+    <div class="product-card">
+  <img src="images/aleovera_wipes.png">
+  <h4>Aloe Vera Baby Wipes</h4>
+  <p>Soothing & gentle care</p>
+  <span class="price">₹219</span>
+
+  <button onclick="addToCart(2,'Aloe Vera Baby Wipes', 219)">
+    Add to Cart
+  </button>
+
+
+  </button>
+</div>
+
+
+    <div class="product-card">
+      <img src="images/wipes.png">
+      <h4>Gentle Baby Wipes</h4>
+      <p>Soft & safe cleansing</p>
+      <span class="price">₹189</span>
+     <button onclick="addToCart(3,'Gentle Baby Wipes', 189)">
+    Add to Cart
+  </button>
+
+  
+  
+    </div>
+
+    <!-- BATH CARE -->
+    <div class="product-card">
+      <img src="images/shampoo.png">
+      <h4>Gentle Baby Shampoo</h4>
+      <p>Tear-free formula</p>
+      <span class="price">₹249</span>
+       <button onclick="addToCart(4,'Gentle Baby Shampoo', 249)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/soap.png">
+      <h4>Mild Baby Soap</h4>
+      <p>pH balanced care</p>
+      <span class="price">₹129</span>
+        <button onclick="addToCart(5,'Mild Baby Soap', 129)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/lotion.png">
+      <h4>Baby Lotion</h4>
+      <p>24-hour moisturisation</p>
+      <span class="price">₹279</span>
+        <button onclick="addToCart(6,'Baby Lotion', 279)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- OILS -->
+    <div class="product-card">
+      <img src="images/massage_oil.png">
+      <h4>Baby Massage Oil</h4>
+      <p>Cold-pressed natural oils</p>
+      <span class="price">₹299</span>
+        <button onclick="addToCart(7,'Baby Massage Oil', 299)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/hair_oil.png">
+      <h4>Baby Hair Oil</h4>
+      <p>Nourishes scalp</p>
+      <span class="price">₹259</span>
+        <button onclick="addToCart(8,'Baby Hair Oil', 259)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- SKIN CARE -->
+    <div class="product-card">
+      <img src="images/powder.png">
+      <h4>Herbal Baby Powder</h4>
+      <p>Prevents rashes</p>
+      <span class="price">₹159</span>
+        <button onclick="addToCart(9,'Herbal Baby Powder', 159)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/rash_cream.png">
+      <h4>Diaper Rash Cream</h4>
+      <p>Natural rash protection</p>
+      <span class="price">₹199</span>
+     <button onclick="addToCart(10,'Diaper Rash Cream', 199)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/tumeric_balm.png">
+      <h4>Turmeric Balm</h4>
+      <p>Relief from bites</p>
+      <span class="price">₹149</span>
+       <button onclick="addToCart(11,'Turmeric Balm', 149)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- HEALTH CARE -->
+    <div class="product-card">
+      <img src="images/Roll_On.png">
+      <h4>Cold Relief Roll-On</h4>
+      <p>Eucalyptus & Tulsi</p>
+      <span class="price">₹169</span>
+        <button onclick="addToCart(12,'Cold Relief Roll ON', 169)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <div class="product-card">
+      <img src="images/patches.png">
+      <h4>Cold Relief Vapour Patches</h4>
+      <p>Natural vapour comfort</p>
+      <span class="price">₹179</span>
+        <button onclick="addToCart(13,'Cold Relief Vapour Patches', 179)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- ORAL CARE -->
+    <div class="product-card">
+      <img src="images/Toothpaste.png">
+      <h4>Kids Natural Toothpaste</h4>
+      <p>Fluoride-free</p>
+      <span class="price">₹149</span>
+        <button onclick="addToCart(14,'Kids Natural Toothpaste', 149)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- MILKY SOFT -->
+    <div class="product-card">
+      <img src="images/mikysoft.png">
+      <h4>Milky Soft Baby Wash</h4>
+      <p>Milk & oats formula</p>
+      <span class="price">₹269</span>
+      <button onclick="addToCart(15,'Milky Soft Baby Wash', 269)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+  </div>
+</section>
+<!-- COMBO OFFERS -->
+<section class="combo-section" id="combo">
+
+  <div class="combo-header">
+    <h2>Combo <span>Offers</span></h2>
+    <p>Save more with specially curated TinyCare combos</p>
+  </div>
+
+  <div class="combo-grid">
+
+    <!-- COMBO 1 -->
+    <div class="combo-card">
+      <span class="combo-badge">Save 25%</span>
+      <img src="images/combo2.png" alt="Newborn Care Combo">
+      <h4>Newborn Care Combo</h4>
+      <p>Shampoo + Lotion + Soap</p>
+      <div class="combo-price">
+        <span class="old-price">₹799</span>
+        <span class="new-price">₹599</span>
+      </div>
+       <button onclick="addToCart(16,'Shampoo + Lotion + Soap', 599)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+    <!-- COMBO 2 -->
+    <div class="combo-card">
+      <span class="combo-badge">Save 30%</span>
+      <img src="images/combo3.png" alt="Hygiene Essentials Combo">
+      <h4>Hygiene Essentials Combo</h4>
+      <p>Water Wipes + Aloe Wipes + Rash Cream</p>
+      <div class="combo-price">
+        <span class="old-price">₹999</span>
+        <span class="new-price">₹699</span>
+      </div>
+   <button onclick="addToCart(18,'Water Wipes + Aloe Wipes + Rash Cream', 699)">
+    Add to Cart
+  </button>
+
+ 
+    </div>
+
+    <!-- COMBO 3 -->
+    <div class="combo-card">
+      <span class="combo-badge">Best Value</span>
+      <img src="images/comboo.png" alt="Complete Baby Care Combo">
+      <h4>Complete Baby Care Combo</h4>
+      <p>Oil + Lotion + Powder + Roll-On</p>
+      <div class="combo-price">
+        <span class="old-price">₹1299</span>
+        <span class="new-price">₹899</span>
+      </div>
+ <button onclick="addToCart(19,'Oil + Lotion + Powder + Roll-On', 899)">
+    Add to Cart
+  </button>
+
+  
+    </div>
+
+  </div>
+</section>
+<section id="reviews" class="reviews-section">
+
+  <h2 class="reviews-title">❤️ Loved by Happy Moms</h2>
+
+  <div class="reviews-wrapper">
+    <div class="reviews-track">
+
+      <!-- Review 1 -->
+      <div class="review-card">
+        <img src="images/review1.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>TinyCare wipes are extremely gentle on my newborn’s skin.</p>
+          <span class="review-name">Anitha R</span>
+        </div>
+      </div>
+
+      <!-- Review 2 -->
+      <div class="review-card">
+        <img src="images/review2.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>My baby’s skin became soft and rash-free.</p>
+          <span class="review-name">Priya S</span>
+        </div>
+      </div>
+
+      <!-- Review 3 -->
+      <div class="review-card">
+        <img src="images/review3.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>Combo packs are value for money and premium.</p>
+          <span class="review-name">Kavitha M</span>
+        </div>
+      </div>
+
+      <!-- Review 4 -->
+      <div class="review-card">
+        <img src="images/review4.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>The mosquito repellent roll-on works very well.</p>
+          <span class="review-name">Maya V</span>
+        </div>
+      </div>
+
+      <!-- Review 5 -->
+      <div class="review-card">
+        <img src="images/review5.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>The baby shampoo is tear-free and smells amazing.</p>
+          <span class="review-name">Priya S</span>
+        </div>
+      </div>
+
+      <!-- Review 6 -->
+      <div class="review-card">
+        <img src="images/review6.png" alt="">
+        <div class="review-content">
+          <div class="stars">★★★★★</div>
+          <p>No rashes at all. Totally loved the quality.</p>
+          <span class="review-name">Sneha P</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<!-- CRAFTED WITH LOVE & SCIENCE -->
+<section class="crafted-section">
+  <div class="crafted-container">
+
+    <!-- LEFT TEXT -->
+    <div class="crafted-text">
+      <span class="crafted-tag">Crafted with Care</span>
+
+      <h2>
+        Crafted with <span>Love</span><br>
+        & Backed by <span>Science</span>
+      </h2>
+
+      <p>
+        At TinyCare Organics, we combine the purity of nature with modern
+        dermatological science to create products that are gentle, safe,
+        and effective for your baby’s delicate skin.
+      </p>
+
+      <ul class="crafted-points">
+        <li>✔ Dermatologically Tested</li>
+        <li>✔ Baby-safe from Day One</li>
+        <li>✔ No Parabens, No Toxins</li>
+        <li>✔ Made for Indian Baby Skin</li>
+      </ul>
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="crafted-image">
+      <img src="images/babyandmom.webp" alt="Mother and Baby">
+    </div>
+
+  </div>
+</section>
+<section id="contact" class="contact-section">
+  <h2>Contact Us</h2>
+  <p>Email: support@tinycare.com</p>
+  <p>Phone: +91 97888 66860</p>
+  <p>Location: India</p>
+</section>
+
+<footer class="tc-footer">
+  <div class="tc-footer-container">
+
+    <div class="tc-footer-brand">
+      <h3>TinyCare Organics</h3>
+      <p>
+        Gentle, safe & natural baby care products crafted with love
+        for your little one’s delicate skin.
+      </p>
+    </div>
+
+    <div class="tc-footer-links">
+      <h4>Quick Links</h4>
+      <a href="#home">Home</a>
+      <a href="#why">Why TinyCare</a>
+      <a href="#products">Our Products</a>
+      <a href="#combo">Combo Offers</a>
+      <a href="#reviews">Reviews</a>
+    </div>
+
+    <div class="tc-footer-links">
+      <h4>Customer Care</h4>
+      <a href="#">Contact Us</a>
+      <a href="#">Shipping Policy</a>
+      <a href="#">Return Policy</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+    </div>
+
+    <div class="tc-footer-contact">
+      <h4>Contact</h4>
+      <p>📍 India</p>
+      <p>📧 support@tinycare.com</p>
+      <p>📞 +91 97888 66860</p>
+    </div>
+
+  </div>
+
+  <div class="tc-footer-bottom">
+    © 2025 TinyCare Organics. All rights reserved.
+  </div>
+</footer>
+<a href="cart.html">🛒 View Cart</a>
+<script>
+
+function addToCart(id, name, price) {
+  fetch("/api/cart/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ id, name, price })
+  })
+  .then(res => {
+    if (res.status === 401) {
+      alert("Please login first");
+      window.location.href = "auth.html";
+      return;
+    }
+    return res.json();
+  })
+  .then(data => {
+    if (data) alert(data.message);
+  });
+}
+</script>
+<script src="/cart.js"></script>
+<script src ="index.js"></script>
+</body>
