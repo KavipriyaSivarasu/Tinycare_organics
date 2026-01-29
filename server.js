@@ -151,6 +151,10 @@ app.post("/api/admin/update-status", (req, res) => {
   res.json({ message: "Status updated" });
 });
 /* ---------- START SERVER ---------- */
-app.listen(5500, () => {
-  console.log("Server running at http://localhost:5500");
-});
+
+  
+
+const PORT=process.env.PORT || 3000;
+app.listen(PORT, () => {
+console.log("Server running on port",PORT);
+  });
