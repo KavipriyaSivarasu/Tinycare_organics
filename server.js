@@ -69,10 +69,11 @@ app.post("/api/logout", (req, res) => {
 });
 
 /* ---------- CART ---------- */
-app.get("/api/cart", requireLogin, (req, res) => {
-  res.json(cart);
+app.get("/api/cart", (req, res) => {
+const cart=
+JSON.parse(fs.readFileSync("cart.json","utf-8"))
+res.json(cart);
 });
-
 /* ADD TO CART */
 app.post("/api/cart/add", requireLogin, (req, res) => {
   const { id, name, price } = req.body;

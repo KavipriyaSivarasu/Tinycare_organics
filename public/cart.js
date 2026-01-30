@@ -1,8 +1,13 @@
 alert("cart.js loaded");
 
-let cart = [
-  { id: 1, name: "Aloe Vera Baby Wipes", price: 219, qty: 1 }
-];
+let cart = [];
+fetch("/api/cart")
+.then(res =>res.json())
+.then(data =>{
+  cart =data;
+  renderCart();
+});
+
 
 const cartItems = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
