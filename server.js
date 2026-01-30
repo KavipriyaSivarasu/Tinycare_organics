@@ -4,7 +4,7 @@ const path = require("path");
 const session = require("express-session");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ||3000;
 
 // ---------- middleware ----------
 app.use(express.json());
@@ -16,21 +16,21 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(express.static("public"));
 
 // ---------- files ----------
-const DATA = "./data";
-const USERS = DATA + "/users.json";
-const CART = DATA + "/cart.json";
-const ORDERS = DATA + "/orders.json";
+const DATA = path.join(__dirname,".data");
+const USERS = path.join(DATA , "users.json");
+const CART = path.join( DATA , "cart.json");
+const ORDERS = path.join(DATA , "orders.json");
 
 if (!fs.existsSync(DATA)) fs.mkdirSync(DATA);
 if (!fs.existsSync(USERS)) fs.writeFileSync(USERS, "[]");
 if (!fs.existsSync(CART)) fs.writeFileSync(CART, "[]");
 if (!fs.existsSync(ORDERS)) fs.writeFileSync(ORDERS, "[]");
 
-const read = f => JSON.parse(fs.readFileSync(f));
-const write = (f, d) => fs.writeFileSync(f, JSON.stringify(d, null, 2));
+const read = file =>  {
+  return JSON.parse(fs.readFileSync(file,"utf-8"));};
+const write = (file, data) =>{ fs.writeFileSync(file, JSON.stringify(data, null, 2));};
 
 // ---------- test ----------
 app.get("/api/test", (req, res) => {
