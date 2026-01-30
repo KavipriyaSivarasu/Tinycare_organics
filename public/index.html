@@ -544,16 +544,20 @@ function logout() {
 </footer>
 
 <script>
-function add(name, price){
-  fetch("/api/cart/add",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({name,price})
-  }).then(r=>{
-    if(!r.ok) alert("Login required");
-    else alert("Added");
+
+
+function addToCart(name, price) {
+  fetch("/api/cart/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, price })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.msg || "Added to cart");
   });
 }
+
 </script>
 
 <script src="/cart.js"></script>
