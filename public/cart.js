@@ -1,14 +1,12 @@
-alert("cart.js loaded");
+console.log("cart.js loaded");
 
 let cart = [];
 
-const cartItemsDiv = document.getElementById("cartItems");
+const cartItems = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
 const payBtn = document.getElementById("payBtn");
 
-/* =====================
-   LOAD CART FROM SERVER
-===================== */
+/* ---------- LOAD CART ---------- */
 fetch("/api/cart")
   .then(res => res.json())
   .then(data => {
@@ -16,15 +14,13 @@ fetch("/api/cart")
     renderCart();
   });
 
-/* =====================
-   RENDER CART
-===================== */
+/* ---------- RENDER ---------- */
 function renderCart() {
-  cartItemsDiv.innerHTML = "";
+  cartItems.innerHTML = "";
   let total = 0;
 
   if (cart.length === 0) {
-    cartItemsDiv.innerHTML = "<p>Cart is empty</p>";
+    cartItems.innerHTML = "<p>Cart is empty</p>";
     totalEl.innerText = "Total: ₹0";
     return;
   }
@@ -32,7 +28,7 @@ function renderCart() {
   cart.forEach(item => {
     total += item.price * item.qty;
 
-    cartItemsDiv.innerHTML += `
+    cartItems.innerHTML += `
       <div class="item" data-id="${item.id}">
         <b>${item.name}</b><br>
         ₹${item.price} × ${item.qty}<br>
@@ -46,14 +42,12 @@ function renderCart() {
   totalEl.innerText = "Total: ₹" + total;
 }
 
-/* =====================
-   + / - / REMOVE
-===================== */
-cartItemsDiv.addEventListener("click", e => {
-  const box = e.target.closest(".item");
-  if (!box) return;
+/* ---------- EVENTS ---------- */
+cartItems.addEventListener("click", e => {
+  const itemDiv = e.target.closest(".item");
+  if (!itemDiv) return;
 
-  const id = Number(box.dataset.id);
+  const id = Number(itemDiv.dataset.id);
   const item = cart.find(i => i.id === id);
 
   if (e.target.classList.contains("plus")) {
@@ -68,31 +62,22 @@ cartItemsDiv.addEventListener("click", e => {
     cart = cart.filter(i => i.id !== id);
   }
 
+  fetch("/api/cart/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: item.id, qty: item.qty })
+  });
+
   renderCart();
 });
 
-/* =====================
-   PAYMENT / CHECKOUT
-===================== */
-payBtn.addEventListener("click", () => {
-  if (cart.length === 0) {
-    alert("Cart is empty");
-    return;
-  }
-
-  fetch("/api/checkout", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      items: cart,
-      total: cart.reduce((s, i) => s + i.price * i.qty, 0),
-      payment: "UPI 9788686860"
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.msg || "Order placed");
-    cart = [];
-    renderCart();
-  });
-});
+/* ---------- PAYMENT ---------- */
+payBtn.onclick = () => {
+  fetch("/api/checkout", { method: "POST" })
+    .then(res => res.json())
+    .then(data => {
+      alert(data.msg);
+      cart = [];
+      renderCart();
+    });
+};

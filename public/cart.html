@@ -2,7 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="/index.css">
- <style>
+<style>
 body {
   font-family: Arial, sans-serif;
   background: #f8feff;
@@ -12,54 +12,45 @@ h2 {
   text-align: center;
 }
 
-/* Cart container */
 #cartItems {
   max-width: 600px;
   margin: 20px auto;
 }
 
-/* Each cart line */
 #cartItems div {
   background: #ffffff;
   padding: 12px 15px;
   margin-bottom: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  font-size: 14px;
 }
 
-/* Total */
 #total {
   max-width: 600px;
   margin: 20px auto;
   padding: 12px;
-  font-size: 16px;
   font-weight: bold;
   background: #00a118;
   border-radius: 8px;
   text-align: right;
+  color: white;
 }
 
-/* Buttons */
 button {
   padding: 6px 12px;
   border-radius: 4px;
   border: none;
   background: #e1e2dd;
-  color: rgb(3, 19, 10);
   cursor: pointer;
-  font-size: 13px;
-  width: auto;   /* 🔥 KEY FIX */
 }
 
-/* Pay button */
 #payBtn {
   display: block;
   margin: 20px auto;
   padding: 10px 30px;
-  font-size: 15px;
   border-radius: 20px;
   background: #383939;
+  color: white;
 }
 </style>
 </head>
@@ -67,48 +58,67 @@ button {
 <body>
 
 <h2>Your Cart</h2>
-<div id="box"></div>
+<div id="cartItems"></div>
 <h3 id="total"></h3>
 
-<button onclick="pay()">Pay via UPI</button>
+<button id="payBtn" onclick="pay()">Pay via UPI</button>
 
 <script>
-function load(){
-  fetch("/api/cart").then(r=>r.json()).then(d=>{
-    let t=0, html="";
-    d.forEach(i=>{
-      t+=i.price*i.qty;
-      html+=`
-        <p>${i.name} - ${i.qty}
-        <button onclick="u('${i.name}',${i.qty+1})">+</button>
-        <button onclick="u('${i.name}',${i.qty-1})">-</button>
-        </p>`;
+const box = document.getElementById("cartItems");
+const total = document.getElementById("total");
+
+function load() {
+  fetch("/api/cart")
+    .then(r => r.json())
+    .then(d => {
+      let t = 0;
+      let html = "";
+
+      if (d.length === 0) {
+        box.innerHTML = "<p>Cart is empty</p>";
+        total.innerText = "Total ₹0";
+        return;
+      }
+
+      d.forEach(i => {
+        t += i.price * i.qty;
+        html += `
+          <div>
+            <b>${i.name}</b><br>
+            ₹${i.price} × ${i.qty}
+            <br>
+            <button onclick="u('${i.name}', ${i.qty + 1})">+</button>
+            <button onclick="u('${i.name}', ${i.qty - 1})">-</button>
+          </div>
+        `;
+      });
+
+      box.innerHTML = html;
+      total.innerText = "Total ₹" + t;
     });
-    box.innerHTML=html;
-    total.innerText="Total ₹"+t;
-  });
 }
 
-function u(name,qty){
-  fetch("/api/cart/update",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({name,qty})
+function u(name, qty) {
+  if (qty < 1) return;
+
+  fetch("/api/cart/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, qty })
   }).then(load);
 }
 
-function pay(){
-  fetch("/api/checkout",{method:"POST"})
-  .then(r=>r.json())
-  .then(d=>alert(d.msg));
+function pay() {
+  fetch("/api/checkout", { method: "POST" })
+    .then(r => r.json())
+    .then(d => {
+      alert(d.msg);
+      load();
+    });
 }
-fetch("/api/checkout", {
-  method: "POST"
-})
-.then(res => res.json())
-.then(data => {
-  console.log("CHECKOUT RESPONSE:", data); // 🔥 VERY IMPORTANT
-  alert(JSON.stringify(data));
-});
+
 load();
 </script>
+
+</body>
+</html>
