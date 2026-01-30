@@ -115,14 +115,20 @@ app.post("/api/cart/update", (req, res) => {
   if (!req.session.user)
     return res.status(401).json({ msg: "login required" });
 
-  const { id, qty } = req.body;
+  const { name, qty } = req.body;
   let cart = read(CART);
 
-  cart = cart.map(i =>
-    i.id === id && i.email === req.session.user.email
-      ? { ...i, qty }
-      : i
-  ).filter(i => i.qty > 0);
+  cart = cart
+    .map(i => {
+      if (
+        i.email === req.session.user.email &&
+        i.name === name
+      ) {
+        return { ...i, qty };
+      }
+      return i;
+    })
+    .filter(i => i.qty > 0);
 
   write(CART, cart);
   res.json({ msg: "updated" });
@@ -167,13 +173,15 @@ app.post("/api/checkout", (req, res) => {
 });
 
 /* ---------- admin ---------- */
+// ---------- ADMIN ORDERS ----------
 app.get("/api/admin/orders", (req, res) => {
-  if (!req.session.user || req.session.user.role !== "admin")
-    return res.status(401).json([]);
+  if (!req.session.user || req.session.user.role !== "admin") {
+    return res.status(401).json({ msg: "admin only" });
+  }
 
-  res.json(read(ORDERS));
+  const orders = read(ORDERS);
+  res.json(orders);
 });
-
 /* ---------- start ---------- */
 app.listen(PORT, () => {
   console.log("Server running on http://localhost:" + PORT);

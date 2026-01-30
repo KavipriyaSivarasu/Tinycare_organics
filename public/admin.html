@@ -2,29 +2,49 @@
 <html>
 <head>
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="/index.css">
+  <style>
+    body { font-family: Arial; background: #f4f6f8; }
+    h2 { text-align: center; }
+    table {
+      width: 95%;
+      margin: auto;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+      text-align: center;
+    }
+    th { background: #2f80ed; color: white; }
+    #revenue {
+      width: 95%;
+      margin: 20px auto;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: right;
+    }
+  </style>
 </head>
 <body>
 
-<h2 class="title">Admin Dashboard</h2>
+<h2>Admin Orders Dashboard</h2>
 
-<div class="stats">
-  <div class="stat-card">
-    <h4>Total Revenue</h4>
-    <p id="revenue">₹0</p>
-  </div>
-</div>
+<div id="revenue">Total Revenue: ₹0</div>
 
-<table class="table">
+<table>
   <thead>
     <tr>
       <th>Email</th>
       <th>Products</th>
       <th>Total</th>
+      <th>Payment</th>
       <th>Status</th>
+      <th>Date</th>
     </tr>
   </thead>
-  <tbody id="t"></tbody>
+  <tbody id="orders"></tbody>
 </table>
 
 <script src="admin.js"></script>
