@@ -83,7 +83,7 @@ function placeOrder() {
 fetch("/api/checkout", { method: "POST" })
   .then(res => res.json())
   .then(data => {
-    alert(data.message);
+    alert(data.msg);
     location.reload();
   });
   fetch("/api/orders", {
