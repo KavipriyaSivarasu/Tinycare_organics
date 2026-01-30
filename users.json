@@ -43,5 +43,11 @@
     "email": "user@tinycare.com",
     "password": "11111",
     "role": "user"
+  },
+  {
+    "id": 1769779123247,
+    "email": "kowsi@gmail.com",
+    "password": "11111",
+    "role": "user"
   }
 ]

@@ -1,0 +1,17 @@
+[
+  {
+    "email": "kavipriyasivarasu04@gmail.com",
+    "password": "11111",
+    "role": "user"
+  },
+  {
+    "email": "admin@tinycare.com",
+    "password": "admin123",
+    "role": "user"
+  },
+  {
+    "email": "admin@gmail.com",
+    "password": "admin123",
+    "role": "admin"
+  }
+]

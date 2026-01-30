@@ -7,7 +7,11 @@ fetch("/api/cart")
   cart =data;
   renderCart();
 });
+const email = sessionStorage.getItem("email"); // login-only identifier
 
+fetch(`/api/cart/${email}`)
+  .then(res => res.json())
+  .then(cart => renderCart(cart));
 
 const cartItems = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
@@ -71,3 +75,25 @@ fetch("/api/order/place", {
     total: totalAmount
   })
 });
+function placeOrder() {
+  if (cart.length === 0) {
+    alert("Cart is empty");
+    return;
+  }
+
+  fetch("/api/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      items: cart,
+      total: cart.reduce((s, i) => s + i.price * i.qty, 0),
+      status: "Paid"
+    })
+  })
+  .then(res => res.json())
+  .then(() => {
+    alert("Order placed successfully");
+    cart = [];
+    renderCart();
+  });
+}

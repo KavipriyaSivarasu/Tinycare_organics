@@ -2,24 +2,29 @@
 <html>
 <head>
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="/index.css">
 </head>
 <body>
 
-<h2>Admin Dashboard</h2>
+<h2 class="title">Admin Dashboard</h2>
 
-<table border="1" width="100%">
+<div class="stats">
+  <div class="stat-card">
+    <h4>Total Revenue</h4>
+    <p id="revenue">₹0</p>
+  </div>
+</div>
+
+<table class="table">
   <thead>
     <tr>
-      <th>User</th>
-      <th>Items</th>
+      <th>Email</th>
+      <th>Products</th>
       <th>Total</th>
-      
       <th>Status</th>
-      <th>Action</th>
     </tr>
   </thead>
-  <tbody id="ordersTable"></tbody>
+  <tbody id="t"></tbody>
 </table>
 
 <script src="admin.js"></script>
