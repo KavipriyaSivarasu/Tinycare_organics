@@ -57,3 +57,12 @@ document.getElementById("payBtn").onclick = () => {
 };
 
 renderCart();
+fetch("/api/order/place", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    email: userEmail,
+    cart: cartItems,
+    total: totalAmount
+  })
+});
