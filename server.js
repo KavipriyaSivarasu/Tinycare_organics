@@ -133,30 +133,43 @@ app.post("/api/cart/update", (req, res) => {
 });
 
 // ---------- checkout ----------
+// ---------- checkout ----------
 app.post("/api/checkout", (req, res) => {
-  if (!req.session.user)
+  if (!req.session.user) {
     return res.status(401).json({ msg: "login required" });
+  }
 
   const cart = read(CART).filter(
     i => i.email === req.session.user.email
   );
+
+  if (cart.length === 0) {
+    return res.json({ msg: "cart empty" });
+  }
 
   const total = cart.reduce(
     (s, i) => s + i.price * i.qty, 0
   );
 
   const orders = read(ORDERS);
+
   orders.push({
     id: Date.now(),
     email: req.session.user.email,
     items: cart,
     total,
     payment: "UPI 9788686860",
-    status: "Paid"
+    status: "Paid",
+    date: new Date().toISOString()
   });
 
   write(ORDERS, orders);
-  write(CART, []);
+
+  // ✅ clear ONLY this user's cart
+  const remainingCart = read(CART).filter(
+    i => i.email !== req.session.user.email
+  );
+  write(CART, remainingCart);
 
   res.json({ msg: "order placed" });
 });

@@ -80,7 +80,12 @@ function placeOrder() {
     alert("Cart is empty");
     return;
   }
-
+fetch("/api/checkout", { method: "POST" })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    location.reload();
+  });
   fetch("/api/orders", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
