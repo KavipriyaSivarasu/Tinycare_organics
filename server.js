@@ -4,46 +4,45 @@ const path = require("path");
 const session = require("express-session");
 
 const app = express();
-const PORT = process.env.PORT ||3000;
+const PORT = process.env.PORT || 3000;
 
-// ---------- middleware ----------
+/* ---------- middleware ---------- */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname,"public")));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(session({
   secret: "tinycare-secret",
   resave: false,
   saveUninitialized: false
 }));
 
-
-// ---------- files ----------
-const DATA = path.join(__dirname,".data");
-const USERS = path.join(DATA , "users.json");
-const CART = path.join( DATA , "cart.json");
-const ORDERS = path.join(DATA , "orders.json");
+/* ---------- files ---------- */
+const DATA = path.join(__dirname, ".data");
+const USERS = path.join(DATA, "users.json");
+const CART = path.join(DATA, "cart.json");
+const ORDERS = path.join(DATA, "orders.json");
 
 if (!fs.existsSync(DATA)) fs.mkdirSync(DATA);
 if (!fs.existsSync(USERS)) fs.writeFileSync(USERS, "[]");
 if (!fs.existsSync(CART)) fs.writeFileSync(CART, "[]");
 if (!fs.existsSync(ORDERS)) fs.writeFileSync(ORDERS, "[]");
 
-const read = file =>  {
-  return JSON.parse(fs.readFileSync(file,"utf-8"));};
-const write = (file, data) =>{ fs.writeFileSync(file, JSON.stringify(data, null, 2));};
+const read = f => JSON.parse(fs.readFileSync(f, "utf-8"));
+const write = (f, d) => fs.writeFileSync(f, JSON.stringify(d, null, 2));
 
-// ---------- test ----------
+/* ---------- test ---------- */
 app.get("/api/test", (req, res) => {
   res.json({ status: "API WORKING" });
 });
 
-// ---------- auth ----------
+/* ---------- auth ---------- */
 app.post("/api/register", (req, res) => {
   const { email, password } = req.body;
   const users = read(USERS);
 
-  if (users.find(u => u.email === email))
+  if (users.find(u => u.email === email)) {
     return res.json({ msg: "exists" });
+  }
 
   users.push({
     email,
@@ -59,33 +58,22 @@ app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
   const users = read(USERS);
 
-  // 🔐 HARD-CODED ADMIN
   if (email === "admin@gmail.com" && password === "admin123") {
-    req.session.user = {
-      email,
-      role: "admin"
-    };
+    req.session.user = { email, role: "admin" };
     return res.json({ role: "admin" });
   }
 
-  // 👤 NORMAL USER
   const user = users.find(
     u => u.email === email && u.password === password
   );
 
-  if (!user) {
-    return res.json({ msg: "invalid" });
-  }
+  if (!user) return res.json({ msg: "invalid" });
 
-  req.session.user = {
-    email: user.email,
-    role: "user"
-  };
-
+  req.session.user = { email: user.email, role: "user" };
   res.json({ role: "user" });
 });
 
-// ---------- cart ----------
+/* ---------- cart ---------- */
 app.post("/api/cart/add", (req, res) => {
   if (!req.session.user)
     return res.status(401).json({ msg: "login required" });
@@ -97,21 +85,24 @@ app.post("/api/cart/add", (req, res) => {
     i => i.email === req.session.user.email && i.name === name
   );
 
-  if (item) item.qty++;
-  else cart.push({
-    email: req.session.user.email,
-    name,
-    price,
-    qty: 1
-  });
+  if (item) {
+    item.qty++;
+  } else {
+    cart.push({
+      id: Date.now(),
+      email: req.session.user.email,
+      name,
+      price,
+      qty: 1
+    });
+  }
 
   write(CART, cart);
   res.json({ msg: "added" });
 });
 
 app.get("/api/cart", (req, res) => {
-  if (!req.session.user)
-    return res.status(401).json([]);
+  if (!req.session.user) return res.json([]);
 
   const cart = read(CART).filter(
     i => i.email === req.session.user.email
@@ -121,31 +112,33 @@ app.get("/api/cart", (req, res) => {
 });
 
 app.post("/api/cart/update", (req, res) => {
+  if (!req.session.user)
+    return res.status(401).json({ msg: "login required" });
+
+  const { id, qty } = req.body;
   let cart = read(CART);
-  const { name, qty } = req.body;
 
   cart = cart.map(i =>
-    i.name === name ? { ...i, qty } : i
+    i.id === id && i.email === req.session.user.email
+      ? { ...i, qty }
+      : i
   ).filter(i => i.qty > 0);
 
   write(CART, cart);
   res.json({ msg: "updated" });
 });
 
-// ---------- checkout ----------
-// ---------- checkout ----------
+/* ---------- checkout ---------- */
 app.post("/api/checkout", (req, res) => {
-  if (!req.session.user) {
+  if (!req.session.user)
     return res.status(401).json({ msg: "login required" });
-  }
 
   const cart = read(CART).filter(
     i => i.email === req.session.user.email
   );
 
-  if (cart.length === 0) {
+  if (cart.length === 0)
     return res.json({ msg: "cart empty" });
-  }
 
   const total = cart.reduce(
     (s, i) => s + i.price * i.qty, 0
@@ -165,16 +158,15 @@ app.post("/api/checkout", (req, res) => {
 
   write(ORDERS, orders);
 
-  // ✅ clear ONLY this user's cart
-  const remainingCart = read(CART).filter(
+  const remaining = read(CART).filter(
     i => i.email !== req.session.user.email
   );
-  write(CART, remainingCart);
+  write(CART, remaining);
 
   res.json({ msg: "order placed" });
 });
 
-// ---------- admin ----------
+/* ---------- admin ---------- */
 app.get("/api/admin/orders", (req, res) => {
   if (!req.session.user || req.session.user.role !== "admin")
     return res.status(401).json([]);
@@ -182,7 +174,7 @@ app.get("/api/admin/orders", (req, res) => {
   res.json(read(ORDERS));
 });
 
-// ---------- start ----------
+/* ---------- start ---------- */
 app.listen(PORT, () => {
   console.log("Server running on http://localhost:" + PORT);
 });

@@ -1,29 +1,38 @@
 alert("cart.js loaded");
 
 let cart = [];
-fetch("/api/cart")
-.then(res =>res.json())
-.then(data =>{
-  cart =data;
-  renderCart();
-});
-const email = sessionStorage.getItem("email"); // login-only identifier
 
-fetch(`/api/cart/${email}`)
-  .then(res => res.json())
-  .then(cart => renderCart(cart));
-
-const cartItems = document.getElementById("cartItems");
+const cartItemsDiv = document.getElementById("cartItems");
 const totalEl = document.getElementById("total");
+const payBtn = document.getElementById("payBtn");
 
+/* =====================
+   LOAD CART FROM SERVER
+===================== */
+fetch("/api/cart")
+  .then(res => res.json())
+  .then(data => {
+    cart = data;
+    renderCart();
+  });
+
+/* =====================
+   RENDER CART
+===================== */
 function renderCart() {
-  cartItems.innerHTML = "";
+  cartItemsDiv.innerHTML = "";
   let total = 0;
+
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = "<p>Cart is empty</p>";
+    totalEl.innerText = "Total: ₹0";
+    return;
+  }
 
   cart.forEach(item => {
     total += item.price * item.qty;
 
-    cartItems.innerHTML += `
+    cartItemsDiv.innerHTML += `
       <div class="item" data-id="${item.id}">
         <b>${item.name}</b><br>
         ₹${item.price} × ${item.qty}<br>
@@ -37,12 +46,14 @@ function renderCart() {
   totalEl.innerText = "Total: ₹" + total;
 }
 
-// 🔥 EVENT DELEGATION (THIS IS THE FIX)
-cartItems.addEventListener("click", function (e) {
-  const itemDiv = e.target.closest(".item");
-  if (!itemDiv) return;
+/* =====================
+   + / - / REMOVE
+===================== */
+cartItemsDiv.addEventListener("click", e => {
+  const box = e.target.closest(".item");
+  if (!box) return;
 
-  const id = Number(itemDiv.dataset.id);
+  const id = Number(box.dataset.id);
   const item = cart.find(i => i.id === id);
 
   if (e.target.classList.contains("plus")) {
@@ -60,48 +71,28 @@ cartItems.addEventListener("click", function (e) {
   renderCart();
 });
 
-// Pay button
-document.getElementById("payBtn").onclick = () => {
-  alert("UPI Payment Initiated");
-};
-
-renderCart();
-fetch("/api/order/place", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    email: userEmail,
-    cart: cartItems,
-    total: totalAmount
-  })
-});
-function placeOrder() {
+/* =====================
+   PAYMENT / CHECKOUT
+===================== */
+payBtn.addEventListener("click", () => {
   if (cart.length === 0) {
     alert("Cart is empty");
     return;
   }
 
-  fetch("/api/orders", {
+  fetch("/api/checkout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       items: cart,
       total: cart.reduce((s, i) => s + i.price * i.qty, 0),
-      status: "Paid"
+      payment: "UPI 9788686860"
     })
   })
   .then(res => res.json())
-  .then(() => {
-    alert("Order placed successfully");
+  .then(data => {
+    alert(data.msg || "Order placed");
     cart = [];
     renderCart();
   });
-}
-fetch("/api/checkout", {
-  method: "POST"
-})
-.then(res => res.json())
-.then(data => {
-  console.log("CHECKOUT RESPONSE:", data); // 🔥 VERY IMPORTANT
-  alert(JSON.stringify(data));
 });
