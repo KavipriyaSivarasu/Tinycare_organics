@@ -102,11 +102,13 @@ function pay(){
   .then(r=>r.json())
   .then(d=>alert(d.msg));
 }
-fetch("/api/checkout", { method: "POST" })
-  .then(res => res.json())
-  .then(data => {
-    alert(data.message);
-    location.reload();
-  });
+fetch("/api/checkout", {
+  method: "POST"
+})
+.then(res => res.json())
+.then(data => {
+  console.log("CHECKOUT RESPONSE:", data); // 🔥 VERY IMPORTANT
+  alert(JSON.stringify(data));
+});
 load();
 </script>
